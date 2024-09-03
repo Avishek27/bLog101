@@ -195,7 +195,6 @@ app.get('/api/v1/blog/:id', (req, res) => __awaiter(void 0, void 0, void 0, func
 app.get('/api/v1/blog/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const posts = yield prisma.post.findMany();
-        console.log(posts);
         return res.status(200).json({
             message: "BLOGS FOUND",
             posts
