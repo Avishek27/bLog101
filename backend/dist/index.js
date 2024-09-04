@@ -17,6 +17,8 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const uuid_1 = require("uuid");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+//@ts-ignore
+const blog101common_1 = require("@avi_0912/blog101common");
 const express = require("express");
 const app = express();
 app.use(express.json());
@@ -25,6 +27,12 @@ const prisma = new client_1.PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "default";
 app.post('/api/v1/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
+    const { success } = blog101common_1.signupInput.safeParse(body);
+    if (!success) {
+        return res.status(403).json({
+            message: "Invalid input (zod error)",
+        });
+    }
     try {
         const password = body.password;
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
@@ -58,6 +66,13 @@ app.post('/api/v1/signup', (req, res) => __awaiter(void 0, void 0, void 0, funct
 }));
 app.post('/api/v1/signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
+    //@ts-ignore
+    const { success } = blog101common_1.signinInput.safeParse(body);
+    if (!success) {
+        return res.status(403).json({
+            message: "Invalid input (zod error)",
+        });
+    }
     try {
         const user = yield prisma.user.findUnique({
             where: {
@@ -117,6 +132,13 @@ app.use('/api/v1/blog/*', (req, res, next) => __awaiter(void 0, void 0, void 0, 
 app.post('/api/v1/blog/post', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, content } = req.body;
     const userid = req.userId;
+    //@ts-ignore
+    const { success } = blog101common_1.createPost.safeParse(body);
+    if (!success) {
+        return res.status(403).json({
+            message: "Invalid input (zod error)",
+        });
+    }
     try {
         const user = yield prisma.user.findUnique({
             where: {
@@ -142,6 +164,13 @@ app.post('/api/v1/blog/post', (req, res) => __awaiter(void 0, void 0, void 0, fu
 app.put('/api/v1/blog/update', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, content, id } = req.body;
     const userid = req.userId;
+    //@ts-ignore
+    const { success } = blog101common_1.updatePost.safeParse(body);
+    if (!success) {
+        return res.status(403).json({
+            message: "Invalid input (zod error)",
+        });
+    }
     try {
         const user = yield prisma.user.findUnique({
             where: {

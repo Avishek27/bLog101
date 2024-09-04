@@ -3,6 +3,10 @@ import cookieParser from "cookie-parser";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
+//@ts-ignore
+import { updatePost ,createPost ,signinInput ,signupInput } from  "@avi_0912/blog101common";
+
+ 
 const express = require("express");
 const app = express();
 
@@ -30,6 +34,12 @@ interface SigninBody extends Express.Request{
 app.post('/api/v1/signup', async (req: SignupBody,res:any) =>{
 
    const body =  req.body;
+   const {success} = signupInput.safeParse(body);
+   if(!success){
+    return res.status(403).json({
+        message: "Invalid input (zod error)",
+    })
+   }
    try {
     const password = body.password;
     const hashedPassword = await bcrypt.hash(password,10);
@@ -65,7 +75,13 @@ app.post('/api/v1/signup', async (req: SignupBody,res:any) =>{
 
 app.post('/api/v1/signin',async (req: SigninBody,res:any)=>{
    const {email,password} = req.body;
-
+   //@ts-ignore
+   const { success } = signinInput.safeParse(body);
+   if(!success){
+    return res.status(403).json({
+        message: "Invalid input (zod error)",
+    })
+   }
    try {
     const user = await prisma.user.findUnique({
         where: {
@@ -151,6 +167,14 @@ app.post('/api/v1/blog/post',async (req: any,res:any)=>{
 
     const { title, content } = req.body;
     const userid = (req as any).userId;
+    //@ts-ignore
+    const { success } = createPost.safeParse(body);
+   if(!success){
+    return res.status(403).json({
+        message: "Invalid input (zod error)",
+    })
+   }
+    
     try{
     const user = await prisma.user.findUnique({
         where: {
@@ -176,7 +200,13 @@ app.post('/api/v1/blog/post',async (req: any,res:any)=>{
 app.put('/api/v1/blog/update',async (req: any,res:any)=>{
     const { title, content,id } = req.body;
     const userid = (req as any).userId;
-
+    //@ts-ignore
+    const { success } = updatePost.safeParse(body);
+   if(!success){
+    return res.status(403).json({
+        message: "Invalid input (zod error)",
+    })
+   }
     try{
     const user = await prisma.user.findUnique({
         where: {
