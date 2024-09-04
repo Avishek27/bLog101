@@ -108,13 +108,13 @@ app.post('/api/v1/signin',async (req: SigninBody,res:any)=>{
 
 
 interface middlewareReq {
-    userId: String
+    userId: String,
 }
 interface middlewareReq extends Express.Request {
     body : middlewareReq,
 }
 
-app.use('/api/v1/blog/*',async (req: middlewareReq,res: any,next: any) => {
+app.use('/api/v1/blog/*',async (req: any,res: any,next: any) => {
     const token = req.cookies.token;
     
 
