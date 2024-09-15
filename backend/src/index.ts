@@ -3,12 +3,18 @@ import cookieParser from "cookie-parser";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import cors from "cors"; 
 //@ts-ignore
 import { updatePost ,createPost ,signinInput ,signupInput } from  "@avi_0912/blog101common";
 
  
 const express = require("express");
 const app = express();
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+}));
 
 app.use(express.json());
 app.use(cookieParser());
