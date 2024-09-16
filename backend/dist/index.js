@@ -17,10 +17,15 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const uuid_1 = require("uuid");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const cors_1 = __importDefault(require("cors"));
 //@ts-ignore
 const blog101common_1 = require("@avi_0912/blog101common");
 const express = require("express");
 const app = express();
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:5173/*',
+    credentials: true,
+}));
 app.use(express.json());
 app.use((0, cookie_parser_1.default)());
 const prisma = new client_1.PrismaClient();
@@ -67,7 +72,7 @@ app.post('/api/v1/signup', (req, res) => __awaiter(void 0, void 0, void 0, funct
 app.post('/api/v1/signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     //@ts-ignore
-    const { success } = blog101common_1.signinInput.safeParse(body);
+    const { success } = blog101common_1.signinInput.safeParse(req.body);
     if (!success) {
         return res.status(403).json({
             message: "Invalid input (zod error)",
@@ -107,6 +112,8 @@ app.post('/api/v1/signin', (req, res) => __awaiter(void 0, void 0, void 0, funct
 }));
 app.use('/api/v1/blog/*', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.cookies.token;
+    console.log("code is in middleware");
+    console.log(token);
     if (!token) {
         return res.status(401).json({
             message: "UNAUTHORIZED",
@@ -115,6 +122,7 @@ app.use('/api/v1/blog/*', (req, res, next) => __awaiter(void 0, void 0, void 0, 
     try {
         const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
         if (!decoded) {
+            console.log("code is not decoded");
             return res.status(401).json({
                 message: "UNAUTHORIZED",
             });
@@ -133,7 +141,7 @@ app.post('/api/v1/blog/post', (req, res) => __awaiter(void 0, void 0, void 0, fu
     const { title, content } = req.body;
     const userid = req.userId;
     //@ts-ignore
-    const { success } = blog101common_1.createPost.safeParse(body);
+    const { success } = blog101common_1.createPost.safeParse(req.body);
     if (!success) {
         return res.status(403).json({
             message: "Invalid input (zod error)",
@@ -165,7 +173,7 @@ app.put('/api/v1/blog/update', (req, res) => __awaiter(void 0, void 0, void 0, f
     const { title, content, id } = req.body;
     const userid = req.userId;
     //@ts-ignore
-    const { success } = blog101common_1.updatePost.safeParse(body);
+    const { success } = blog101common_1.updatePost.safeParse(req.body);
     if (!success) {
         return res.status(403).json({
             message: "Invalid input (zod error)",

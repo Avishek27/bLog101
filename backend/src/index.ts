@@ -12,7 +12,7 @@ const express = require("express");
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173/*',
+    origin: 'http://localhost:5173',
     credentials: true,
 }));
 
@@ -139,7 +139,8 @@ interface middlewareReq extends Express.Request {
 app.use('/api/v1/blog/*',async (req: any,res: any,next: any) => {
     const token = req.cookies.token;
     
-
+    console.log("code is in middleware");
+    console.log(token);
     if(!token){
         return res.status(401).json({
             message: "UNAUTHORIZED",
@@ -149,6 +150,7 @@ app.use('/api/v1/blog/*',async (req: any,res: any,next: any) => {
 
     const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
     if(!decoded){
+        console.log("code is not decoded");
         return  res.status(401).json({
           message: "UNAUTHORIZED",
         });
