@@ -174,7 +174,7 @@ app.post('/api/v1/blog/post',async (req: any,res:any)=>{
     const { title, content } = req.body;
     const userid = (req as any).userId;
     //@ts-ignore
-    const { success } = createPost.safeParse(body);
+    const { success } = createPost.safeParse(req.body);
    if(!success){
     return res.status(403).json({
         message: "Invalid input (zod error)",
@@ -207,7 +207,7 @@ app.put('/api/v1/blog/update',async (req: any,res:any)=>{
     const { title, content,id } = req.body;
     const userid = (req as any).userId;
     //@ts-ignore
-    const { success } = updatePost.safeParse(body);
+    const { success } = updatePost.safeParse(req.body);
    if(!success){
     return res.status(403).json({
         message: "Invalid input (zod error)",
