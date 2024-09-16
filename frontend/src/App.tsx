@@ -1,13 +1,22 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Signup from "./pages/Signup";
+import Signin from "./pages/Signin";
+import Blog from "./pages/Blog";
+import CreateBlog from "./pages/CreateBlog";
+import Home from "./pages/Home";
 
-
-import './App.css'
-
-function App() {
-
+export  function App() {
+  
 
   return (
-    <div>
-    Hello
-      </div>
+    <BrowserRouter>
+    <Routes>
+      <Route path="/signup" element = {<Signup/>}/>
+      <Route path="/signin" element = {<Signin/>}/>
+      <Route path="/blog" element = {<Blog/>}/>
+      <Route path="/createblog" element = {<CreateBlog/>}/>
+      <Route path="/" element = {<Home/>}/>
+    </Routes>
+    </BrowserRouter>
   )
 }

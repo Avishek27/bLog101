@@ -82,7 +82,7 @@ app.post('/api/v1/signup', async (req: SignupBody,res:any) =>{
 app.post('/api/v1/signin',async (req: SigninBody,res:any)=>{
    const {email,password} = req.body;
    //@ts-ignore
-   const { success } = signinInput.safeParse(body);
+   const { success } = signinInput.safeParse(req.body);
    if(!success){
     return res.status(403).json({
         message: "Invalid input (zod error)",
